@@ -1,19 +1,17 @@
 {
-  "name": "school-application-generator",
-  "private": true,
+  "name": "school-application-backend",
   "version": "1.0.0",
-  "type": "module",
+  "description": "Backend for School Application Generator - save applications and send emails",
+  "main": "server.js",
+  "type": "commonjs",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.1",
-    "vite": "^5.4.1"
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "nodemailer": "^6.9.14"
   }
 }
