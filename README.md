@@ -1,29 +1,19 @@
-# School Application Generator — Backend
+School Application Generator — Backend
 
-Ye ek chhota Node.js/Express server hai jo aapke School Application Generator
-frontend ke liye 2 kaam karta hai:
+This is a small Node.js/Express backend server for your School Application Generator frontend. It performs two main tasks:
 
-1. Applications ko database (yahan ek simple `applications.json` file) mein save karna
-2. Applications ko real SMTP se email karna (Gmail, Outlook, ya koi bhi SMTP provider)
+Saves applications to a database (using a simple applications.json file in this example)
+Sends applications via email using a real SMTP service (Gmail, Outlook, or any SMTP provider)
 
-> **Zaroori baat:** Yeh backend Claude.ai ke chat preview ke andar chal rahe React
-> app se seedha connect NAHI ho sakta — chat ka preview ek sandboxed environment
-> mein chalta hai jo bahar ke localhost/servers ko call nahi kar sakta. Is backend
-> ko use karne ke liye aapko frontend code ko apne khud ke computer par ek normal
-> React/Vite project banakar chalana hoga, ya kisi hosting (Vercel, Netlify, Render)
-> par dono (frontend + backend) deploy karna hoga.
+Important:
 
-## Setup
-
-```bash
+Setup
 cd backend
 npm install
 cp .env.example .env
-```
 
-`.env` file kholiye aur apni details bhariye:
+Open the .env file and fill in your details:
 
-```
 PORT=5000
 FRONTEND_ORIGIN=http://localhost:5173
 SMTP_HOST=smtp.gmail.com
@@ -31,73 +21,62 @@ SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
 FROM_EMAIL=your-email@gmail.com
-```
 
-Gmail use kar rahe hain to normal password kaam nahi karega — Google account
-settings mein jaake ek "App Password" banayein (2-step verification on hone
-ke baad "App Passwords" option milta hai).
+If you're using Gmail, your normal account password will not work. You must enable 2-Step Verification in your Google Account and generate an App Password from the App Passwords section.
 
-Phir server chalayein:
+Start the server:
 
-```bash
 npm start
-```
 
-Server `http://localhost:5000` par chalega.
+The server will run at:
 
-## API Endpoints
-
-| Method | Route | Kaam |
-|---|---|---|
-| GET | `/api/health` | Server chal raha hai ya nahi, check karne ke liye |
-| GET | `/api/applications` | Sab saved applications ki list |
-| GET | `/api/applications/:id` | Ek application ki detail |
-| POST | `/api/applications` | Naya application save karna |
-| DELETE | `/api/applications/:id` | Application delete karna |
-| POST | `/api/send-email` | Application ko email se bhejna |
-
-### Example: Application save karna
-
-```js
+http://localhost:5000
+API Endpoints
+Method	Route	Purpose
+GET	/api/health	Check if the server is running
+GET	/api/applications	Retrieve all saved applications
+GET	/api/applications/:id	Retrieve a specific application
+POST	/api/applications	Save a new application
+DELETE	/api/applications/:id	Delete an application
+POST	/api/send-email	Send an application via email
+Example: Save an Application
 fetch("http://localhost:5000/api/applications", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
     template: "leave",
     lang: "hi",
-    form: { studentName: "Rahul Kumar", className: "10" },
-    fullText: "Poora letter text yahan...",
+    form: {
+      studentName: "Rahul Kumar",
+      className: "10",
+    },
+    fullText: "Complete application text goes here...",
     studentName: "Rahul Kumar",
   }),
 });
-```
-
-### Example: Email bhejna
-
-```js
+Example: Send an Email
 fetch("http://localhost:5000/api/send-email", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
     to: "principal@school.com",
     subject: "Application for Leave",
-    text: "Poora letter text yahan...",
+    text: "Complete application text goes here...",
   }),
 });
-```
+Connecting the Frontend to This Backend
 
-## Frontend ko is backend se jodna
+If you want to host the complete project (frontend + backend) yourself:
 
-Agar aap poora project (frontend + backend) khud host karna chahte hain:
+Deploy this backend on any Node.js hosting platform such as Render, Railway, or Fly.io (all offer free tiers).
 
-1. Is backend ko kisi bhi Node hosting par deploy karo (Render, Railway, Fly.io — sab free tier dete hain)
-2. React frontend (jo Claude ne banaya) ko ek normal Vite project mein daalo
-   (`npm create vite@latest my-app -- --template react`, phir component file
-   `src/App.jsx` mein paste kar do)
-3. Frontend mein jahan `Save this application` button hai, wahan upar wale
-   `fetch` example jaisa code daal do, jisse data is backend ko jaaye
-4. Deploy dono ko (Vercel/Netlify par frontend, Render par backend)
+Create a React Vite project:
 
-Agar sirf Claude.ai ke andar hi use karna hai (deploy karne ka jhanjhat nahi
-chahiye), to jo "Save to history" aur "Send email/WhatsApp" button pehle se
-frontend mein hain — wahi kaafi hain, unhe kisi backend ki zaroorat nahi.
+npm create vite@latest my-app -- --template react
+
+Then paste the component generated by Claude into src/App.jsx.
+
+In the frontend, connect the "Save this application" button using the fetch() example shown above so that it sends data to this backend.
+Deploy the frontend on Vercel or Netlify, and deploy the backend on Render.
+
+If you only want to use the application inside Claude.ai and don't want the hassle of deployment, the existing "Save to History" and "Send Email/WhatsApp" buttons are sufficient—they work without requiring a backend.
